@@ -9,6 +9,7 @@ import xgboost as xgb
 import lightgbm as lgb
 import flask
 import joblib
+import io
 app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
@@ -26,14 +27,9 @@ def upload():
     if 'file' not in flask.request.files:
         return 'ファイル未指定'
 
-    # fileの取得（FileStorage型で取れる）
-    # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
-    csv_data = flask.request.files['data']
-
-    if isinstance(csv_data, FileStorage) and csv_data.content_type == 'text/csv':
-        test = pd.read_csv(csv_data)
-    else:
-        raise ValueError('data is not csv')
+    csv_data = flask.request.files['file']
+    uni_string = file.stream.read()
+    test = pd.read_csv(io.BytesIO(uni_string), encoding='utf8')
 
     # ファイルを保存
     #fs.save('upload/test.csv')
@@ -274,6 +270,5 @@ def upload():
         attachment_filename = downloadFileName)
 
 if __name__ == "__main__":
-    '頑張って計算してますので、5分少々お待ちください。'
 
     app.run(debug=False)

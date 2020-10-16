@@ -33,14 +33,14 @@ def upload():
     app.logger.info('content_type={} content_length={}, mimetype={}, mimetype_params={}'.format(
         fs.content_type, fs.content_length, fs.mimetype, fs.mimetype_params))
 
-    fs.save('upload/test.csv')
+    fs.save('upload/test_x.csv')
 
     train_x = pd.read_csv('trained-model/train_x.csv')
     train_y = pd.read_csv('trained-model/train_y.csv')
     train_y = train_y.drop('お仕事No.', axis=1)
     data = pd.concat([train_x, train_y], axis=1)
 
-    test = pd.read_csv('upload/test.csv')
+    test = pd.read_csv('upload/test_x.csv', encoding="utf8", na_values=['missing'])
 
 
     for i in range(len(data)):
@@ -365,9 +365,9 @@ def upload():
     job_number_test = test['お仕事No.'].copy()
     predictions_pd = pd.Series(data = predictions, name='応募数 合計')
     submit = pd.concat([job_number_test, predictions_pd], axis=1)
-    submit.to_csv("export/test_y.csv", index=False, encoding='utf-8')
+    submit.to_csv("test_y.csv", index=False, encoding='utf-8')
 
-    downloadFileName = 'export/test_y.csv'
+    downloadFileName = 'test_y.csv'
     downloadFile = 'test_y.csv' 
     return flask.send_file(downloadFile, as_attachment = True, attachment_filename = downloadFileName)
 

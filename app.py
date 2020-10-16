@@ -6,7 +6,6 @@ from sklearn.ensemble import (RandomForestRegressor, AdaBoostRegressor,
 from sklearn.model_selection import KFold, train_test_split
 from sklearn.linear_model import Ridge
 import xgboost as xgb
-import lightgbm as lgb
 import flask
 import joblib
 app = flask.Flask(__name__)
@@ -28,9 +27,12 @@ def upload():
     if 'file' not in flask.request.files:
         return 'ファイル未指定'
 
+    print('before Done')
+
     # fileの取得（FileStorage型で取れる）
     # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
     fs = flask.request.files['file']
+    print('Done')
 
     # 下記のような情報がFileStorageからは取れる
     app.logger.info('file_name={}'.format(fs.filename))

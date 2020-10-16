@@ -50,6 +50,7 @@ def upload():
     train_y = pd.read_csv('trained-model/train_y.csv')
     train_y = train_y.drop('お仕事No.', axis=1)
     data = pd.concat([train_x, train_y], axis=1)
+    print('1')
 
     data = data.drop(['勤務地　最寄駅3（駅名）', 'オープニングスタッフ', '未使用.20', 'メモ', '（紹介予定）年収・給与例',
                  'WEB面接OK', '応募先　備考', '応募拠点', '固定残業制 残業代 下限', '未使用.12', 'シニア（60〜）歓迎',
@@ -75,6 +76,7 @@ def upload():
                  '固定残業制 残業代 上限', '未使用.6', '仕事写真（下）　写真3　ファイル名', '勤務地　最寄駅3（駅からの交通手段）',
                  'ブロックコード1', '未使用.19', 'WEB関連のスキルを活かす', '勤務地　最寄駅1（駅からの交通手段）', '応募先　名称',
                  '（派遣先）配属先部署', '（派遣先）職場の雰囲気', '勤務地　最寄駅1（分）'], axis=1)
+    print('2')
 
     test = test.drop(['勤務地　最寄駅3（駅名）', 'オープニングスタッフ', '未使用.20', 'メモ', '（紹介予定）年収・給与例',
                  'WEB面接OK', '応募先　備考', '応募拠点', '固定残業制 残業代 下限', '未使用.12', 'シニア（60〜）歓迎',
@@ -109,6 +111,7 @@ def upload():
                 '勤務地　備考', 'お仕事名', '仕事内容', '拠点番号', '応募資格', '派遣会社のうれしい特典', '掲載期間　終了日',
                 'お仕事のポイント（仕事PR）', '動画ファイル名', '勤務地　最寄駅1（駅名）'], axis=1)
     
+    print('3')
     features_to_scale = data.drop(['お仕事No.'], axis=1).columns
     scaler = pp.StandardScaler(copy=True)
     data.loc[:, features_to_scale] = scaler.fit_transform(data[features_to_scale])

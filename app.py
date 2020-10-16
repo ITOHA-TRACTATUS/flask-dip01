@@ -34,8 +34,8 @@ def upload():
 
     fs.save('upload/test_x.csv')
 
-    train_x = pd.read_csv('trained-model/train_x.csv')
-    train_y = pd.read_csv('trained-model/train_y.csv')
+    train_x = pd.read_csv('trained-model/train_x.csv', encoding="utf8", na_values=['missing'])
+    train_y = pd.read_csv('trained-model/train_y.csv', encoding="utf8", na_values=['missing'])
     train_y = train_y.drop('お仕事No.', axis=1)
     data = pd.concat([train_x, train_y], axis=1)
 

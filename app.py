@@ -33,6 +33,7 @@ def upload():
     # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
     fs = flask.request.files['file']
     print('Done')
+    '''
 
     # 下記のような情報がFileStorageからは取れる
     app.logger.info('file_name={}'.format(fs.filename))
@@ -41,8 +42,10 @@ def upload():
 
     # ファイルを保存
     fs.save('upload/test.csv')
+    '''
     
-    test = pd.read_csv('upload/test.csv')
+    test = pd.read_csv(fs)
+    print('Read')
     train_x = pd.read_csv('trained-model/train_x.csv')
     train_y = pd.read_csv('trained-model/train_y.csv')
     train_y = train_y.drop('お仕事No.', axis=1)

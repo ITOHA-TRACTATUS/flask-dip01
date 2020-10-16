@@ -17,7 +17,7 @@ def index():
     <form method="post" action="/upload" enctype="multipart/form-data">
       <input type="file" name="file">
       <button>upload</button>
-      <h3>５分少々お待ちください。</h3>
+      <h4>５分少々お待ちください。自動的にファイルはダウンロードされます。</h4>
     </form>
 '''
 
@@ -373,6 +373,5 @@ def upload():
 
 
 if __name__ == "__main__":
-    '頑張って計算してますので、5分少々お待ちください。'
 
     app.run(debug=False)

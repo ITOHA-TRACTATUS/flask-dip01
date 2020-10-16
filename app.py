@@ -14,14 +14,15 @@ app = flask.Flask(__name__)
 @app.route('/', methods=['GET'])
 def index():
     return '''
-    <form method="post" action="/trained-model" enctype="multipart/form-data">
+    <form method="post" action="/" enctype="multipart/form-data">
       <input type="file" name="file">
       <button>upload</button>
       <h3>５分少々お待ちください。頑張って計算しています。</h3>
+      <h3>＊アップロードに30秒以上かかると仕様でタイムアウトします。</h3>
     </form>
 '''
 
-@app.route('/trained-model', methods=['POST'])
+@app.route('/', methods=['POST'])
 def upload():
 
     csv_data = flask.request.files['file']
@@ -237,26 +238,11 @@ def upload():
     submit = pd.concat([job_number_test, predictions_pd], axis=1)
     submit.to_csv("export/test_y.csv", index=False, encoding='utf-8')
 
-    return'''
-    <html>
-    <body>
-    <a href="export/test_y.csv">
-    <div class="dlb">
-    Download
-    </div>
-    </a>
-    </body>
-    </html>
-
-    ''' 
-    
-    '''
     downloadFileName = 'test_y.csv'
     downloadFile = 'export/test_y.csv' 
 
     return flask.send_file(downloadFile, as_attachment = True, \
         attachment_filename = downloadFileName)
-    '''
 
 if __name__ == "__main__":
 

@@ -14,7 +14,7 @@ app = flask.Flask(__name__)
 @app.route('/', methods=['GET'])
 def index():
     return '''
-    <form method="post" action="/" enctype="multipart/form-data">
+    <form method="post" action="/upload" enctype="multipart/form-data">
       <input type="file" name="file">
       <button>upload</button>
       <h3>５分少々お待ちください。頑張って計算しています。</h3>
@@ -22,12 +22,25 @@ def index():
     </form>
 '''
 
-@app.route('/', methods=['POST'])
+@app.route('/upload', methods=['POST'])
+
 def upload():
+    if 'file' not in flask.request.files:
+        return 'ファイル未指定'
 
-    csv_data = flask.request.files['file']
-    test = pd.read_csv(csv_data)
+    # fileの取得（FileStorage型で取れる）
+    # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
+    fs = flask.request.files['file']
 
+    # 下記のような情報がFileStorageからは取れる
+    app.logger.info('file_name={}'.format(fs.filename))
+    app.logger.info('content_type={} content_length={}, mimetype={}, mimetype_params={}'.format(
+        fs.content_type, fs.content_length, fs.mimetype, fs.mimetype_params))
+
+    # ファイルを保存
+    fs.save('upload/test.csv')
+    
+    test = pd.read_csv('upload/test.csv')
     train_x = pd.read_csv('trained-model/train_x.csv')
     train_y = pd.read_csv('trained-model/train_y.csv')
     train_y = train_y.drop('お仕事No.', axis=1)

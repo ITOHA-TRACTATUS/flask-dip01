@@ -237,12 +237,13 @@ def upload():
     print('5')
 
     et_oof_train, et_oof_test = get_oof(et, x_train, y_train, x_test) # Extra Trees Classifier
+    print('6')
     rf_oof_train, rf_oof_test = get_oof(rf,x_train, y_train, x_test) # Random Forest Classifier
+    print('7')
     ada_oof_train, ada_oof_test = get_oof(ada, x_train, y_train, x_test) # AdaBoost Classifier
     gb_oof_train, gb_oof_test = get_oof(gb,x_train, y_train, x_test) # Gradient Boost Classifier
 
     xg1_oof_train, xg1_oof_test = get_oof(xg1,x_train,y_train,x_test)
-    print('6')
     xg2_oof_train, xg2_oof_test = get_oof(xg2,x_train,y_train,x_test)
     xg3_oof_train, xg3_oof_test = get_oof(xg3,x_train,y_train,x_test)
     xg4_oof_train, xg4_oof_test = get_oof(xg4,x_train,y_train,x_test)

@@ -8,6 +8,7 @@ from sklearn.model_selection import KFold, train_test_split
 import xgboost as xgb
 import flask
 import joblib
+import re
 app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
@@ -25,16 +26,13 @@ def upload():
     if 'file' not in flask.request.files:
         return 'ファイル未指定'
 
-    # fileの取得（FileStorage型で取れる）
     # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
     fs = flask.request.files['file']
 
-    # 下記のような情報がFileStorageからは取れる
     app.logger.info('file_name={}'.format(fs.filename))
     app.logger.info('content_type={} content_length={}, mimetype={}, mimetype_params={}'.format(
         fs.content_type, fs.content_length, fs.mimetype, fs.mimetype_params))
 
-    # ファイルを保存
     fs.save('upload/test.csv')
 
     train_x = pd.read_csv('trained-model/train_x.csv')
@@ -59,11 +57,9 @@ def upload():
     for i in range(len(data)):
         movie_comment_num = len(str(data['動画コメント'].iloc[i]))
         data['動画コメント'].iloc[i] = movie_comment_num
-        movie_comment_len_data.append(movie_comment_num)
     for i in range(len(test)):
         movie_comment_num = len(str(test['動画コメント'].iloc[i]))
         test['動画コメント'].iloc[i] = movie_comment_num
-        movie_comment_len_test.append(movie_comment_num)
 
     data['休日休暇　備考'] = data['休日休暇　備考'].fillna('空欄')
     test['休日休暇　備考'] = test['休日休暇　備考'].fillna('空欄')
@@ -71,11 +67,9 @@ def upload():
     for i in range(len(data)):
         holiday_remarks_num = len(str(data['休日休暇　備考'].iloc[i]))
         data['休日休暇　備考'].iloc[i] = holiday_remarks_num
-        holiday_remarks_len_data.append(holiday_remarks_num)
     for i in range(len(test)):
         holiday_remarks_num = len(str(test['休日休暇　備考'].iloc[i]))
         test['休日休暇　備考'].iloc[i] = holiday_remarks_num
-        holiday_remarks_len_test.append(holiday_remarks_num)
 
     data['（派遣）応募後の流れ'] = data['（派遣）応募後の流れ'].fillna('空欄')
     test['（派遣）応募後の流れ'] = test['（派遣）応募後の流れ'].fillna('空欄')
@@ -83,11 +77,9 @@ def upload():
     for i in range(len(data)):
         after_application_num = len(str(data['（派遣）応募後の流れ'].iloc[i]))
         data['（派遣）応募後の流れ'].iloc[i] = after_application_num
-        after_application_len_data.append(after_application_num)
     for i in range(len(test)):
         after_application_num = len(str(test['（派遣）応募後の流れ'].iloc[i]))
         test['（派遣）応募後の流れ'].iloc[i] = after_application_num
-        after_application_len_test.append(after_application_num)
 
     data['応募資格'] = data['応募資格'].fillna('空欄')
     test['応募資格'] = test['応募資格'].fillna('空欄')
@@ -103,11 +95,9 @@ def upload():
     for i in range(len(data)):
         qualification_num = len(str(data['応募資格'].iloc[i]))
         data['応募資格'].iloc[i] = qualification_num
-        qualification_len_data.append(qualification_num)
     for i in range(len(test)):
         qualification_num = len(str(test['応募資格'].iloc[i]))
         test['応募資格'].iloc[i] = qualification_num
-        qualification_len_test.append(qualification_num)
 
     data['派遣会社のうれしい特典'] = data['派遣会社のうれしい特典'].fillna('空欄')
     test['派遣会社のうれしい特典'] = test['派遣会社のうれしい特典'].fillna('空欄')
@@ -115,11 +105,9 @@ def upload():
     for i in range(len(data)):
         special_gift_num = len(str(data['派遣会社のうれしい特典'].iloc[i]))
         data['派遣会社のうれしい特典'].iloc[i] = special_gift_num
-        special_gift_len_data.append(special_gift_num)
     for i in range(len(test)):
         special_gift_num = len(str(test['派遣会社のうれしい特典'].iloc[i]))
         test['派遣会社のうれしい特典'].iloc[i] = special_gift_num
-        special_gift_len_test.append(special_gift_num)
 
     data['お仕事のポイント（仕事PR）'] = data['お仕事のポイント（仕事PR）'].fillna('空欄')
     test['お仕事のポイント（仕事PR）'] = test['お仕事のポイント（仕事PR）'].fillna('空欄')
@@ -127,11 +115,9 @@ def upload():
     for i in range(len(data)):
         public_relations_num = len(str(data['お仕事のポイント（仕事PR）'].iloc[i]))
         data['お仕事のポイント（仕事PR）'].iloc[i] = public_relations_num
-        public_relations_len_data.append(public_relations_num)
     for i in range(len(test)):
         public_relations_num = len(str(test['お仕事のポイント（仕事PR）'].iloc[i]))
         test['お仕事のポイント（仕事PR）'].iloc[i] = public_relations_num
-        public_relations_len_test.append(public_relations_num)
 
     data['（派遣先）職場の雰囲気'] = data['（派遣先）職場の雰囲気'].fillna('空欄')
     test['（派遣先）職場の雰囲気'] = test['（派遣先）職場の雰囲気'].fillna('空欄')
@@ -139,11 +125,9 @@ def upload():
     for i in range(len(data)):
         workplace_environment_num = len(str(data['（派遣先）職場の雰囲気'].iloc[i]))
         data['（派遣先）職場の雰囲気'].iloc[i] = workplace_environment_num
-        workplace_environment_len_data.append(workplace_environment_num)
     for i in range(len(test)):
         workplace_environment = len(str(test['（派遣先）職場の雰囲気'].iloc[i]))
         test['（派遣先）職場の雰囲気'].iloc[i] = workplace_environment_num
-        workplace_environment_len_test.append(workplace_environment_num)
 
     data['給与/交通費　備考'] = data['給与/交通費　備考'].fillna('空欄')
     test['給与/交通費　備考'] = test['給与/交通費　備考'].fillna('空欄')
@@ -151,11 +135,9 @@ def upload():
     for i in range(len(data)):
         expenses_remarks_num = len(str(data['給与/交通費　備考'].iloc[i]))
         data['給与/交通費　備考'].iloc[i] = expenses_remarks_num
-        expenses_remarks_len_data.append(expenses_remarks_num)
     for i in range(len(test)):
         expenses_remarks = len(str(test['給与/交通費　備考'].iloc[i]))
         test['給与/交通費　備考'].iloc[i] = expenses_remarks_num
-        expenses_remarks_len_test.append(expenses_remarks_num)
 
     data['期間･時間　備考'] = data['期間･時間　備考'].fillna('空欄')
     test['期間･時間　備考'] = test['期間･時間　備考'].fillna('空欄')
@@ -163,11 +145,9 @@ def upload():
     for i in range(len(data)):
         time_remarks_num = len(str(data['期間･時間　備考'].iloc[i]))
         data['期間･時間　備考'].iloc[i] = time_remarks_num
-        time_remarks_len_data.append(time_remarks_num)
     for i in range(len(test)):
         time_remarks = len(str(test['期間･時間　備考'].iloc[i]))
         test['期間･時間　備考'].iloc[i] = time_remarks_num
-        time_remarks_len_test.append(time_remarks_num)
         
     data['（派遣先）配属先部署　男女比　男'] = data['（派遣先）配属先部署　男女比　男'].fillna(11)
     data['（派遣先）配属先部署　男女比　女'] = data['（派遣先）配属先部署　男女比　女'].fillna(11)
@@ -386,12 +366,11 @@ def upload():
     predictions_pd = pd.Series(data = predictions, name='応募数 合計')
     submit = pd.concat([job_number_test, predictions_pd], axis=1)
     submit.to_csv("export/test_y.csv", index=False, encoding='utf-8')
-    
-    downloadFileName = 'test_y.csv'
-    downloadFile = 'export/test_y.csv' 
 
-    return flask.send_file(downloadFile, as_attachment = True, \
-        attachment_filename = downloadFileName)
+    downloadFileName = 'export/test_y.csv'
+    downloadFile = 'test_y.csv' 
+    return flask.send_file(downloadFile, as_attachment = True, attachment_filename = downloadFileName)
+
 
 if __name__ == "__main__":
     '頑張って計算してますので、5分少々お待ちください。'

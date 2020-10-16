@@ -9,37 +9,28 @@ import xgboost as xgb
 import lightgbm as lgb
 import flask
 import joblib
-import io
 app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
     return '''
-    <form method="post" action="/upload" enctype="multipart/form-data">
+    <form method="post" action="/trained-model" enctype="multipart/form-data">
       <input type="file" name="file">
       <button>upload</button>
       <h3>５分少々お待ちください。頑張って計算しています。</h3>
     </form>
 '''
 
-@app.route('/upload', methods=['POST'])
+@app.route('/trained-model', methods=['POST'])
 def upload():
-    if 'file' not in flask.request.files:
-        return 'ファイル未指定'
 
     csv_data = flask.request.files['file']
-    uni_string = csv_data.stream.read()
-    test = pd.read_csv(io.BytesIO(uni_string), encoding='utf8')
-
-    # ファイルを保存
-    #fs.save('upload/test.csv')
+    test = pd.read_csv(csv_data)
 
     train_x = pd.read_csv('trained-model/train_x.csv')
     train_y = pd.read_csv('trained-model/train_y.csv')
     train_y = train_y.drop('お仕事No.', axis=1)
     data = pd.concat([train_x, train_y], axis=1)
-
-    #test = pd.read_csv('upload/test.csv')
 
     data = data.drop(['勤務地　最寄駅3（駅名）', 'オープニングスタッフ', '未使用.20', 'メモ', '（紹介予定）年収・給与例',
                  'WEB面接OK', '応募先　備考', '応募拠点', '固定残業制 残業代 下限', '未使用.12', 'シニア（60〜）歓迎',

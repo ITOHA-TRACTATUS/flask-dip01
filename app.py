@@ -28,7 +28,7 @@ def upload():
         return 'ファイル未指定'
 
     csv_data = flask.request.files['file']
-    uni_string = file.stream.read()
+    uni_string = csv_data.stream.read()
     test = pd.read_csv(io.BytesIO(uni_string), encoding='utf8')
 
     # ファイルを保存

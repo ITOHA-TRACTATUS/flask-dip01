@@ -1,10 +1,3 @@
-pip install numpy
-pip install pandas
-pip install sklearn
-pip install xgboost
-pip install Flask
-pip install joblib
-
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing as pp

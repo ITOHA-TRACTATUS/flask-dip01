@@ -8,7 +8,6 @@ from sklearn.model_selection import KFold, train_test_split
 import xgboost as xgb
 import flask
 import joblib
-import re
 app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
@@ -41,15 +40,6 @@ def upload():
     data = pd.concat([train_x, train_y], axis=1)
 
     test = pd.read_csv('upload/test_x.csv', encoding="utf8", na_values=['missing'])
-
-
-    for i in range(len(data)):
-        num = re.sub("\\D", "", str(data['拠点番号'].iloc[i]))
-        data['拠点番号'].iloc[i] = num
-    
-    for i in range(len(test)):
-        num = re.sub("\\D", "", str(test['拠点番号'].iloc[i]))
-        test['拠点番号'].iloc[i] = num
 
     data['動画コメント'] = data['動画コメント'].fillna('空欄')
     test['動画コメント'] = test['動画コメント'].fillna('空欄')
@@ -165,7 +155,7 @@ def upload():
                     'フリー項目　内容', 'ブロックコード3', '未使用.16', 'バイク・自転車通勤OK', '未使用.9', '動画タイトル',
                     '勤務地　最寄駅1（沿線名）', '週払い', '外国人活躍中・留学生歓迎', '人材紹介', '（紹介予定）雇用形態備考',
                     'これまでの採用者例', '仕事写真（下）　写真3　コメント', '（派遣先）概要　勤務先名（漢字）', '日払い',
-                    'フリー項目　タイトル', '未使用.11', 
+                    'フリー項目　タイトル', '未使用.11', '拠点番号',
                     '給与　経験者給与下限', '未使用.8', '（派遣先）勤務先写真コメント', '無期雇用派遣', '応募先　所在地　ブロックコード',
                     'Wワーク・副業可能', '待遇・福利厚生', '主婦(ママ)・主夫歓迎', '未使用.18', '給与/交通費　給与上限', '未使用.15',
                     '（紹介予定）入社後の雇用形態', '少人数の職場', '固定残業制 残業代に充当する労働時間数 下限', '未使用.4',
@@ -191,7 +181,7 @@ def upload():
                     'フリー項目　内容', 'ブロックコード3', '未使用.16', 'バイク・自転車通勤OK', '未使用.9', '動画タイトル',
                     '勤務地　最寄駅1（沿線名）', '週払い', '外国人活躍中・留学生歓迎', '人材紹介', '（紹介予定）雇用形態備考',
                     'これまでの採用者例', '仕事写真（下）　写真3　コメント', '（派遣先）概要　勤務先名（漢字）', '日払い',
-                    'フリー項目　タイトル', '未使用.11', 
+                    'フリー項目　タイトル', '未使用.11', '拠点番号',
                     '給与　経験者給与下限', '未使用.8', '（派遣先）勤務先写真コメント', '無期雇用派遣', '応募先　所在地　ブロックコード',
                     'Wワーク・副業可能', '待遇・福利厚生', '主婦(ママ)・主夫歓迎', '未使用.18', '給与/交通費　給与上限', '未使用.15',
                     '（紹介予定）入社後の雇用形態', '少人数の職場', '固定残業制 残業代に充当する労働時間数 下限', '未使用.4',
@@ -365,10 +355,10 @@ def upload():
     job_number_test = test['お仕事No.'].copy()
     predictions_pd = pd.Series(data = predictions, name='応募数 合計')
     submit = pd.concat([job_number_test, predictions_pd], axis=1)
-    submit.to_csv("test_y.csv", index=False, encoding='utf-8')
+    submit.to_csv("export/test_y.csv", index=False, encoding='utf-8')
 
     downloadFileName = 'test_y.csv'
-    downloadFile = 'test_y.csv' 
+    downloadFile = 'export/test_y.csv' 
     return flask.send_file(downloadFile, as_attachment = True, attachment_filename = downloadFileName)
 
 

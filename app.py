@@ -35,14 +35,14 @@ def upload():
         fs.content_type, fs.content_length, fs.mimetype, fs.mimetype_params))
 
     # ファイルを保存
-    fs.save('upload/test.csv')
+    fs.save('test.csv')
 
     train_x = pd.read_csv('trained-model/train_x.csv')
     train_y = pd.read_csv('trained-model/train_y.csv')
     train_y = train_y.drop('お仕事No.', axis=1)
     data = pd.concat([train_x, train_y], axis=1)
 
-    test = pd.read_csv('upload/test.csv')
+    test = pd.read_csv('test.csv')
 
     data = data.drop(['勤務地　最寄駅3（駅名）', 'オープニングスタッフ', '未使用.20', 'メモ', '（紹介予定）年収・給与例',
                  'WEB面接OK', '応募先　備考', '応募拠点', '固定残業制 残業代 下限', '未使用.12', 'シニア（60〜）歓迎',

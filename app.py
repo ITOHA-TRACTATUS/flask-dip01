@@ -178,12 +178,6 @@ def upload():
         'verbose': 0
     }
 
-    # Support Vector Classifier 
-    svc_params = {
-        'kernel' : 'linear',
-        'C' : 0.025
-    }
-
     gb_params1 = {'learning_rate' : 0.1,
                 'max_depth' : 2,
                 'subsample' : 0.5
@@ -227,17 +221,6 @@ def upload():
     xg2_oof_train, xg2_oof_test = get_oof(xg2,x_train,y_train,x_test)
     xg3_oof_train, xg3_oof_test = get_oof(xg3,x_train,y_train,x_test)
     xg4_oof_train, xg4_oof_test = get_oof(xg4,x_train,y_train,x_test)
-
-    base_predictions_train = pd.DataFrame( {
-        'RandomForest': rf_oof_train.ravel(),
-        'ExtraTrees': et_oof_train.ravel(),
-        'AdaBoost': ada_oof_train.ravel(),
-        'GradientBoost': gb_oof_train.ravel(),
-        'XGBoost1': xg1_oof_train.ravel(),
-        'XGBoost2': xg2_oof_train.ravel(),
-        'XGBoost3': xg3_oof_train.ravel(),
-        'XGBoost4': xg4_oof_train.ravel()
-        })
     
     x_train = np.concatenate(( et_oof_train, rf_oof_train, ada_oof_train, gb_oof_train,
                         xg1_oof_train, xg2_oof_train, xg3_oof_train, xg4_oof_train), axis=1)

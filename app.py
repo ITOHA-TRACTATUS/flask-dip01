@@ -28,12 +28,12 @@ def upload():
 
     # fileの取得（FileStorage型で取れる）
     # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
-    fs = flask.request.files['file']
+    csv_data = flask.request.files['data']
 
-    # 下記のような情報がFileStorageからは取れる
-    app.logger.info('file_name={}'.format(fs.filename))
-    app.logger.info('content_type={} content_length={}, mimetype={}, mimetype_params={}'.format(
-        fs.content_type, fs.content_length, fs.mimetype, fs.mimetype_params))
+    if isinstance(csv_data, FileStorage) and csv_data.content_type == 'text/csv':
+        test = pd.read_csv(csv_data)
+    else:
+        raise ValueError('data is not csv')
 
     # ファイルを保存
     #fs.save('upload/test.csv')
@@ -44,7 +44,6 @@ def upload():
     data = pd.concat([train_x, train_y], axis=1)
 
     #test = pd.read_csv('upload/test.csv')
-    test = fs
 
     data = data.drop(['勤務地　最寄駅3（駅名）', 'オープニングスタッフ', '未使用.20', 'メモ', '（紹介予定）年収・給与例',
                  'WEB面接OK', '応募先　備考', '応募拠点', '固定残業制 残業代 下限', '未使用.12', 'シニア（60〜）歓迎',
